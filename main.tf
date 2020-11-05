@@ -83,15 +83,15 @@ resource "azurerm_kubernetes_cluster" "kubernetes" {
   dynamic service_principal {
     for_each = var.use_managed_identity ? [] : ["SP"]
     content {
-      client_id     = data.azurerm_key_vault_secret.aksspid.value
-      client_secret = data.azurerm_key_vault_secret.aksspsecret.value
+      client_id     = data.azurerm_key_vault_secret.aksspid[0].value
+      client_secret = data.azurerm_key_vault_secret.aksspsecret[0].value
     }
   }
 
   dynamic identity {
     for_each = var.use_managed_identity ? ["SystemAssigned"] : []
     content {
-      type = each.value
+      type = "SystemAssigned"
     }
   }
 
