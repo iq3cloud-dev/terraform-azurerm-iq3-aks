@@ -49,7 +49,6 @@ variable "aks_configuration" {
   type = object({
     vm_size                        = string
     os_disk_size_gb                = number
-    kubernetes_node_count          = number
     kubernetes_min_node_count      = number
     kubernetes_max_node_count      = number
     kubernetes_enable_auto_scaling = bool

@@ -61,7 +61,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes" {
   default_node_pool {
     name                = "agentpool"
     type                = "VirtualMachineScaleSets"
-    node_count          = var.aks_configuration.kubernetes_node_count
+    node_count          = var.aks_configuration.kubernetes_min_node_count
     enable_auto_scaling = var.aks_configuration.kubernetes_enable_auto_scaling
     min_count           = var.aks_configuration.kubernetes_min_node_count
     max_count           = var.aks_configuration.kubernetes_max_node_count
