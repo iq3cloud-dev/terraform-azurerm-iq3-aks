@@ -82,6 +82,15 @@ variable "aks_addons" {
     enable_azure_policy              = false
   }
 }
+variable "ingress_controller" {
+  type    = bool
+  default = true
+}
+
+variable "ip_domain_name_label" {
+  type    = string
+  default = null
+}
 
 ##################################
 # Log Analytics

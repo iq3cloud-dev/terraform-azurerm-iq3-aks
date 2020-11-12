@@ -113,12 +113,23 @@ resource "azurerm_kubernetes_cluster" "kubernetes" {
   }
 }
 
+# Create Static Public IP Address to be used by Nginx Ingress
+resource "azurerm_public_ip" "nginx_ingress" {
+  name                         = "${var.name}-public-IP"
+  location                     = azurerm_kubernetes_cluster.kubernetes.location
+  resource_group_name          = azurerm_kubernetes_cluster.kubernetes.node_resource_group
+  allocation_method            = "Static"
+  domain_name_label            = var.ip_domain_name_label
+}
+
 data "helm_repository" "stable" {
   name = "stable"
   url  = "https://kubernetes-charts.storage.googleapis.com"
 }
 
 resource "helm_release" "nginx_ingress_controller" {
+  count = var.ingress_controller != null ? 1 : 0
+
   name       = "nginx-ingress-controller"
   repository = data.helm_repository.stable.metadata.0.name
   chart      = "stable/nginx-ingress"
@@ -126,5 +137,9 @@ resource "helm_release" "nginx_ingress_controller" {
   set {
     name  = "controller.replicaCount"
     value = 2
+  }
+  set {
+    name  = "controller.service.loadBalancerIP"
+    value = azurerm_public_ip.nginx_ingress.ip_address
   }
 }
