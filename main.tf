@@ -17,6 +17,15 @@
 # For questions and contributions please contact info@iq3cloud.com
 # https://github.com/iq3cloud-dev/terraform-azurerm-iq3-aks
 
+terraform {
+  required_providers {
+    helm = {
+      source = "hashicorp/helm"
+      version = "1.3.2"
+    }
+  }
+}
+
 provider "kubernetes" {
   version                = "~>1.10.0"
   host                   = azurerm_kubernetes_cluster.kubernetes.kube_config.0.host
@@ -124,7 +133,7 @@ resource "azurerm_public_ip" "nginx_ingress" {
 
 data "helm_repository" "stable" {
   name = "stable"
-  url  = "https://kubernetes-charts.storage.googleapis.com"
+  url  = "https://charts.helm.sh/stable"
 }
 
 resource "helm_release" "nginx_ingress_controller" {
