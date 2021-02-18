@@ -20,7 +20,7 @@
 terraform {
   required_providers {
     helm = {
-      source = "hashicorp/helm"
+      source  = "hashicorp/helm"
       version = "1.3.2"
     }
   }
@@ -89,7 +89,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes" {
     enabled = true
   }
 
-  dynamic service_principal {
+  dynamic "service_principal" {
     for_each = var.use_managed_identity ? [] : ["SP"]
     content {
       client_id     = data.azurerm_key_vault_secret.aksspid[0].value
@@ -97,7 +97,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes" {
     }
   }
 
-  dynamic identity {
+  dynamic "identity" {
     for_each = var.use_managed_identity ? ["SystemAssigned"] : []
     content {
       type = "SystemAssigned"
@@ -124,11 +124,11 @@ resource "azurerm_kubernetes_cluster" "kubernetes" {
 
 # Create Static Public IP Address to be used by Nginx Ingress
 resource "azurerm_public_ip" "nginx_ingress" {
-  name                         = "${var.name}-public-IP"
-  location                     = azurerm_kubernetes_cluster.kubernetes.location
-  resource_group_name          = azurerm_kubernetes_cluster.kubernetes.node_resource_group
-  allocation_method            = "Static"
-  domain_name_label            = var.ip_domain_name_label
+  name                = "${var.name}-public-IP"
+  location            = azurerm_kubernetes_cluster.kubernetes.location
+  resource_group_name = azurerm_kubernetes_cluster.kubernetes.node_resource_group
+  allocation_method   = "Static"
+  domain_name_label   = var.ip_domain_name_label
 }
 
 data "helm_repository" "stable" {
