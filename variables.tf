@@ -84,26 +84,10 @@ variable "aks_addons" {
 }
 variable "ingress_controller" {
   type    = bool
-  default = true
+  default = false
 }
 
 variable "ip_domain_name_label" {
   type    = string
   default = null
-}
-
-##################################
-# Log Analytics
-##################################
-
-variable "log_analytics_workspace_sku" {
-  type = string
-}
-
-variable "log_retention_in_days" {
-  type = number
-}
-
-variable "loganalytics_workspace_name" {
-  type = string
 }

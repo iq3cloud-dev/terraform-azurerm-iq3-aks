@@ -124,7 +124,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes" {
 
 # Create Static Public IP Address to be used by Nginx Ingress
 resource "azurerm_public_ip" "nginx_ingress" {
-  count               = var.ingress_controller != false ? 1 : 0
+  count               = var.ingress_controller == true ? 1 : 0
   name                = "${var.name}-public-IP"
   location            = azurerm_kubernetes_cluster.kubernetes.location
   resource_group_name = azurerm_kubernetes_cluster.kubernetes.node_resource_group
@@ -138,7 +138,7 @@ data "helm_repository" "stable" {
 }
 
 resource "helm_release" "nginx_ingress_controller" {
-  count = var.ingress_controller != false ? 1 : 0
+  count = var.ingress_controller == true ? 1 : 0
 
   name       = "nginx-ingress-controller"
   repository = data.helm_repository.stable.metadata.0.name
