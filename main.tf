@@ -21,13 +21,16 @@ terraform {
   required_providers {
     helm = {
       source  = "hashicorp/helm"
-      version = "1.3.2"
+      version = "2.1.2"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~>1.10.0"
     }
   }
 }
 
 provider "kubernetes" {
-  version                = "~>1.10.0"
   host                   = azurerm_kubernetes_cluster.kubernetes.kube_config.0.host
   client_certificate     = base64decode(azurerm_kubernetes_cluster.kubernetes.kube_config.0.client_certificate)
   client_key             = base64decode(azurerm_kubernetes_cluster.kubernetes.kube_config.0.client_key)
@@ -41,7 +44,6 @@ provider "helm" {
     client_certificate     = base64decode(azurerm_kubernetes_cluster.kubernetes.kube_config.0.client_certificate)
     client_key             = base64decode(azurerm_kubernetes_cluster.kubernetes.kube_config.0.client_key)
     cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.kubernetes.kube_config.0.cluster_ca_certificate)
-    load_config_file       = false
   }
 }
 
@@ -132,17 +134,12 @@ resource "azurerm_public_ip" "nginx_ingress" {
   domain_name_label   = var.ip_domain_name_label
 }
 
-data "helm_repository" "stable" {
-  name = "stable"
-  url  = "https://charts.helm.sh/stable"
-}
-
 resource "helm_release" "nginx_ingress_controller" {
   count = var.ingress_controller == true ? 1 : 0
 
   name       = "nginx-ingress-controller"
-  repository = data.helm_repository.stable.metadata.0.name
-  chart      = "stable/nginx-ingress"
+  repository = "https://helm.nginx.com/stable"
+  chart      = "nginx-ingress"
 
   set {
     name  = "controller.replicaCount"
