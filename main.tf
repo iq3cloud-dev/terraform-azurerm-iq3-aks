@@ -70,15 +70,16 @@ resource "azurerm_kubernetes_cluster" "kubernetes" {
   }
 
   default_node_pool {
-    name                = "agentpool"
-    type                = "VirtualMachineScaleSets"
-    node_count          = var.aks_configuration.kubernetes_node_count
-    enable_auto_scaling = var.aks_configuration.kubernetes_enable_auto_scaling
-    min_count           = var.aks_configuration.kubernetes_min_node_count
-    max_count           = var.aks_configuration.kubernetes_max_node_count
-    vm_size             = var.aks_configuration.vm_size
-    os_disk_size_gb     = var.aks_configuration.os_disk_size_gb
-    vnet_subnet_id      = var.aks_subnet_id
+    name                 = "agentpool"
+    type                 = "VirtualMachineScaleSets"
+    node_count           = var.aks_configuration.kubernetes_node_count
+    enable_auto_scaling  = var.aks_configuration.kubernetes_enable_auto_scaling
+    min_count            = var.aks_configuration.kubernetes_min_node_count
+    max_count            = var.aks_configuration.kubernetes_max_node_count
+    vm_size              = var.aks_configuration.vm_size
+    os_disk_size_gb      = var.aks_configuration.os_disk_size_gb
+    vnet_subnet_id       = var.aks_subnet_id
+    orchestrator_version = var.aks_configuration.kubernetes_version
   }
 
   network_profile {
