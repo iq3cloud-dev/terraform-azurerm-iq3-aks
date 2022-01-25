@@ -139,7 +139,7 @@ resource "helm_release" "nginx_ingress_controller" {
   count = var.ingress_controller == true ? 1 : 0
 
   name       = "nginx-ingress-controller"
-  repository = "https://kubernetes.github.io/ingress-nginx"
+  repository = "https://helm.nginx.com/stable"
   chart      = "nginx-ingress"
 
   set {
